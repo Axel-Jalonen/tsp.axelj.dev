@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSP Browser</title>
+</head>
+<style>
+    * {
+        font-family: monospace;
+    }
+    body{
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+    canvas {
+        background: grey;
+    }
+</style>
+<body>
+    <div style="position: absolute; left: 50%; top: 50px; transform: translateX(-50%);">
+        <label for="point-entry-mode-toggle">Point Entry Mode</label>
+        <span id="status"></span>
+        <input  id="point-entry-mode-toggle" type="checkbox"></input>
+    </div>
+   <canvas width="1920px" height="1080px" id="myCanvas"></canvas> 
+</body>
+<script src="index.js"></script>
+</html>
