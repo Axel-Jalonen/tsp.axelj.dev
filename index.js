@@ -1,74 +1,60 @@
 const c = document.getElementById("myCanvas");
-c.width = window.innerWidth;
+c.width = window.innerWidth
 c.height = window.innerHeight;
+
 var ctx = c.getContext("2d");
+
 const shouldQuitElement = document.getElementById("point-entry-mode-toggle");
 const statusElement = document.getElementById("status");
+const clearElement = document.getElementById("clear");
 
-ctx.fillStyle = "black";
-const RECT_WIDTH = 10
-const OFFSET = (RECT_WIDTH / 2)
+const RECT_SIZE = 10;
+const RECT_OFFSET = (RECT_SIZE / 2);
 
-class Point {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-}
+var points = [];
 
-function recordPoints() {
-    const array = [];
-    statusElement.textContent = "Recording points";
-    var notShouldQuit = shouldQuitElement.checked;
-    function pushNewPoints(e) {
-        const x = (e.clientX);
-        const y = (e.clientY);
-        statusElement.textContent = `${x} * ${y}`;
-        array.push(new Point(x, y));
-        drawPoint(new Point(x, y));
-    }
-    c.addEventListener("click", pushNewPoints)
-    if (!notShouldQuit) {
-        c.removeEventListener("click", pushNewPoints); 
-        return array;
-    }
-}
+clearElement.addEventListener("click", () => {
+    points = [];
+    ctx.clearRect(0, 0, c.width, c.height);
+})
 
-function getRandPoint(array) {
-    const randIndex = Math.floor(Math.random() * array.length);
-    return array[randIndex];
-}
-
-function removePoint(Point, array) {
-    const index = array.indexOf(Point);
-    if (index > -1) {
-        array.splice(index, 1);
-    }
-    return array
-}
-
-function drawPoint(point) {
-    const x = point.x;
-    const y = point.y;
+c.addEventListener("click", (e) => {
+    var x = e.clientX;
+    var y = e.clientY;
     ctx.fillStyle = "black";
-    ctx.fillRect(x - OFFSET, y - OFFSET, RECT_WIDTH, RECT_WIDTH);
+    ctx.fillRect(x - RECT_OFFSET, y - RECT_OFFSET, RECT_SIZE, RECT_SIZE);
+    points.push([x, y]);
+    const entry = getRandPoint();
+    solve(entry, points);
+})
+
+function getRandPoint() {
+    const index = Math.floor(Math.random() * points.length);
+    return points[index];
 }
 
-function drawAllPoints(array) {
-    statusElement.textContent = "Drawing points";
-    array.forEach(drawPoint);
-}
-
-function render() {
-    statusElement.textContent = "Rendering " + Math.round(Math.random()*100);
-    var positions = [];
-    if (shouldQuitElement.checked) {
-        positions = recordPoints();
-        if (positions.length > 0) {
-            // const randPoint = getRandPoint(positions);
-            drawAllPoints(positions);
-        }
+function solve(currentPoint, pointsCpy) {
+    if (pointsCpy.length === 0) {
+        return;
     }
-    window.requestAnimationFrame(render);
+
+    var distance = Infinity;
+    var bestPoint = null;
+
+    pointsCpy.forEach((point) => {
+        const distanceNew = Math.sqrt(Math.pow(currentPoint[0] - point[0], 2) + Math.pow(currentPoint[1] - point[1], 2));
+        if ((distanceNew < distance) && !(point[0] === currentPoint[0] && point[1] === currentPoint[1])) {
+            distance = distanceNew;
+            bestPoint = { coords: point, distance: distance };
+            ctx.beginPath();
+            ctx.moveTo(currentPoint[0], currentPoint[1]);
+            ctx.lineTo(point[0], point[1]);
+            ctx.stroke();
+            ctx.closePath();
+        }
+    })
+
+    pointsCpy = pointsCpy.filter(point => !(point[0] === bestPoint.coords[0] && point[1] === bestPoint.coords[1]));
+    console.log(pointsCpy);
+    solve(bestPoint.coords, pointsCpy);
 }
-window.requestAnimationFrame(render);

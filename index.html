@@ -8,23 +8,38 @@
 <style>
     * {
         font-family: monospace;
+        margin: 0;
+        padding: 0;
     }
     body{
         margin: 0;
         padding: 0;
+        overflow: hidden;
         width: 100vw;
         height: 100vh;
     }
+    button {
+        position: absolute;
+        top: 50px;
+        left: 50%;
+        font-size: 2rem;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        border-radius: 5px;
+        outline: none;
+        border: 1px solid grey;
+        background: white;
+        z-index: 1;
+    }
+    button:hover {
+        cursor: pointer;
+    }
     canvas {
-        background: grey;
+        background: white;
     }
 </style>
 <body>
-    <div style="position: absolute; left: 50%; top: 50px; transform: translateX(-50%);">
-        <label for="point-entry-mode-toggle">Point Entry Mode</label>
-        <span id="status"></span>
-        <input  id="point-entry-mode-toggle" type="checkbox"></input>
-    </div>
+   <button id="clear">Clear</button>
    <canvas width="1920px" height="1080px" id="myCanvas"></canvas> 
 </body>
 <script src="index.js"></script>
