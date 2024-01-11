@@ -65,6 +65,5 @@ function solve(currentPoint, pointsCpy) {
     ctx.closePath();
 
     pointsCpy = pointsCpy.filter(point => !(point[0] === bestPoint.coords[0] && point[1] === bestPoint.coords[1]));
-    console.log(pointsCpy);
     solve(bestPoint.coords, pointsCpy);
 }
