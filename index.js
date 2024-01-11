@@ -1,15 +1,15 @@
 const c = document.getElementById("myCanvas");
-c.width = window.innerWidth
-c.height = window.innerHeight;
-
+var cssScaleX = c.width / c.offsetWidth;  
+var cssScaleY = c.height / c.offsetHeight;
 var ctx = c.getContext("2d");
 
 const shouldQuitElement = document.getElementById("point-entry-mode-toggle");
 const statusElement = document.getElementById("status");
 const clearElement = document.getElementById("clear");
 
-const RECT_SIZE = 10;
+const RECT_SIZE = 30;
 const RECT_OFFSET = (RECT_SIZE / 2);
+ctx.lineWidth = 10;
 
 var points = [];
 
@@ -19,8 +19,8 @@ clearElement.addEventListener("click", () => {
 })
 
 c.addEventListener("click", (e) => {
-    var x = e.clientX;
-    var y = e.clientY;
+    var x = e.clientX * cssScaleX;
+    var y = e.clientY * cssScaleY;
     ctx.fillStyle = "black";
     ctx.fillRect(x - RECT_OFFSET, y - RECT_OFFSET, RECT_SIZE, RECT_SIZE);
     points.push([x, y]);
