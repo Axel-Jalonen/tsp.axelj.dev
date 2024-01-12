@@ -7,6 +7,7 @@ var ctx = c.getContext("2d");
 const statusElement = document.getElementById("status");
 const clearElement = document.getElementById("clear");
 const toggleEdgesElement = document.getElementById("toggle-edges");
+const optimizeElement = document.getElementById("optimize");
 
 const RECT_SIZE = 30;
 const RECT_OFFSET = RECT_SIZE / 2;
@@ -48,6 +49,7 @@ toggleEdgesElement.addEventListener("click", () => {
     }
     toggleEdgesElement.value = "1";
 });
+optimizeElement.addEventListener("click", optimize);
 
 c.addEventListener("click", (e) => {
     const x = e.clientX * cssScaleX;
@@ -60,6 +62,20 @@ c.addEventListener("click", (e) => {
     solve(entry, points);
 });
 
+function optimize() {
+    let bestDistance = Infinity;
+    let bestPoint;
+    points.forEach((point) => {
+        solve(point, points);
+        if (totalDistance < bestDistance) {
+            bestDistance = totalDistance;
+            bestPoint = point;
+        }
+        refreshCanvas();
+    });
+    solve(bestPoint, points);
+}
+
 function getRandPoint() {
     const index = Math.floor(Math.random() * points.length);
     return points[index];
@@ -68,48 +84,50 @@ function getRandPoint() {
 function solve(currentPoint, pointsCpy) {
     // we have to do this because solve is run without the button begin pressed
     toggleEdgesElement.value = "0";
-    
-    // We shouldn't use filter here
-    pointsCpy = pointsCpy.filter(
-        (point) =>
-            !(point[0] === currentPoint[0] && point[1] === currentPoint[1])
-    );
+
+    // // We shouldn't use filter here
+    // pointsCpy = pointsCpy.filter(
+    //     (point) =>
+    //         !(point[0] === currentPoint[0] && point[1] === currentPoint[1])
+    // );
+
     if (pointsCpy.length === 0) {
         return;
     }
+
     var distance = Infinity;
-    var bestPoint = null;
+    var bestPoint;
 
     pointsCpy.forEach((point) => {
-        const distanceNew = Math.sqrt(
-            Math.pow(currentPoint[0] - point[0], 2) +
-                Math.pow(currentPoint[1] - point[1], 2)
-        );
-        if (
-            distanceNew < distance &&
-            !(point[0] === currentPoint[0] && point[1] === currentPoint[1])
-        ) {
-            distance = distanceNew;
-            bestPoint = { coords: point, distance: distance };
+        if (!(point[0] === currentPoint[0] && point[1] === currentPoint[1])) {
+            const distanceNew = Math.sqrt(
+                Math.pow(currentPoint[0] - point[0], 2) +
+                    Math.pow(currentPoint[1] - point[1], 2)
+            );
+            if (distanceNew < distance) {
+                distance = distanceNew;
+                bestPoint = point;
+            }
         }
     });
+
     totalDistance += distance;
     if (totalDistance !== Infinity) {
         statusElement.innerHTML = `Total distance: ${totalDistance.toFixed(2)}`;
     }
+
     ctx.beginPath();
     ctx.moveTo(currentPoint[0], currentPoint[1]);
-    ctx.lineTo(bestPoint.coords[0], bestPoint.coords[1]);
+    ctx.lineTo(bestPoint[0], bestPoint[1]);
     ctx.stroke();
     ctx.closePath();
 
     // We shouldn't use filter here
     pointsCpy = pointsCpy.filter(
         (point) =>
-            !(
-                point[0] === bestPoint.coords[0] &&
-                point[1] === bestPoint.coords[1]
-            )
+            !(point[0] === bestPoint[0] && point[1] === bestPoint[1]) &&
+            !(point[0] === currentPoint[0] && point[1] === currentPoint[1])
     );
-    solve(bestPoint.coords, pointsCpy);
+
+    solve(bestPoint, pointsCpy);
 }
