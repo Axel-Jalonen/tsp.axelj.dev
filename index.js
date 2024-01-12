@@ -1,5 +1,5 @@
 const c = document.getElementById("myCanvas");
-var cssScaleX = c.width / c.offsetWidth;  
+var cssScaleX = c.width / c.offsetWidth;
 var cssScaleY = c.height / c.offsetHeight;
 var ctx = c.getContext("2d");
 
@@ -12,12 +12,17 @@ const RECT_OFFSET = (RECT_SIZE / 2);
 ctx.lineWidth = 10;
 
 var points = [];
+var totalDistance;
 
 function clearCanvas() {
     points = [];
+    totalDistance = 0;
+    statusElement.innerHTML = `Total distance: ${totalDistance.toFixed(2)}`;
     ctx.clearRect(0, 0, c.width, c.height);
 }
+
 function refreshCanvas() {
+    totalDistance = 0;
     ctx.clearRect(0, 0, c.width, c.height);
     points.forEach((point) => {
         ctx.fillStyle = "black";
@@ -57,7 +62,10 @@ function solve(currentPoint, pointsCpy) {
             bestPoint = { coords: point, distance: distance };
         }
     })
-
+    totalDistance += distance;
+    if (totalDistance !== Infinity) {
+        statusElement.innerHTML = `Total distance: ${totalDistance.toFixed(2)}`;
+    }
     ctx.beginPath();
     ctx.moveTo(currentPoint[0], currentPoint[1]);
     ctx.lineTo(bestPoint.coords[0], bestPoint.coords[1]);

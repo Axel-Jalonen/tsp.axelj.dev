@@ -39,9 +39,17 @@
         width: 100vw;
         height: 100vh;
     }
+    #status {
+        font-size: 1rem;
+        position: absolute;
+        top: 1.25rem;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 </style>
 <body>
    <button id="clear">Clear</button>
+   <div id="status">Click anywhere to start!</div>
    <canvas width="7680px" height="4320px" id="myCanvas"></canvas> 
 </body>
 <script src="index.js"></script>
