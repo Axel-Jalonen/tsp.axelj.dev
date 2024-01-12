@@ -4,6 +4,8 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/x-icon" href="./favicon.svg" />
+        <!-- description -->
+        <meta name="description" content="Solve custom traveling salesman problems in the browser using the greedy heuristic nearest neighbors algorithm in real time" />
         <title>TSP Browser</title>
     </head>
     <style>
@@ -21,7 +23,8 @@
             position: absolute;
             display: flex;
             flex-direction: column;
-            top: 50px;
+            top: 10px;
+            text-align: center;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -42,20 +45,23 @@
             width: 100vw;
             height: 100vh;
         }
-        #status {
+        .info-text {
             font-size: 1rem;
-            position: absolute;
             top: 1.25rem;
-            left: 50%;
-            transform: translateX(-50%);
         }
     </style>
     <body>
-        <div id="status">Click anywhere to start!</div>
         <div id="interaction-container">
+            <div class="info-text" id="algorithm-status">Algorithm: <span>nearest_neighbors (heuristic, greedy)</span></div>
+            <div class="info-text" id="status">Click anywhere to start!</div>
             <button id="clear">clear</button>
-            <button id="optimize">optimize O(n<sup>3</sup>)</button>
+            <button id="optimize" value="0"><span>_</span> optimize nearest_neighbors O(n<sup>3</sup>)</button>
             <button id="toggle-edges" value="0">toggle_edges</button>
+            <div id="algorithm-toggle-container">
+                <button id="algorithm-toggle-nn" value="0"><span>&#9679</span> nearest_neighbors</button>
+                /
+                <button id="algorithm-toggle-bnb" value="1"><span>_</span> branch_&_bound</button>
+            </div>
         </div>
         <canvas width="7680px" height="4320px" id="myCanvas"></canvas>
     </body>
