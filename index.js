@@ -1,13 +1,12 @@
 const c = document.getElementById("myCanvas");
-var cssScaleX = c.width / c.offsetWidth;
-var cssScaleY = c.height / c.offsetHeight;
+const cssScaleX = c.width / c.offsetWidth;
+const cssScaleY = c.height / c.offsetHeight;
 var ctx = c.getContext("2d");
 
-const shouldQuitElement = document.getElementById("point-entry-mode-toggle");
+// TODO, make this work for non 16:9 screens
 const statusElement = document.getElementById("status");
 const clearElement = document.getElementById("clear");
 const showEdges = document.getElementById("toggle-edges");
-const optimizeButton = document.getElementById("optimize");
 
 const RECT_SIZE = 30;
 const RECT_OFFSET = RECT_SIZE / 2;
@@ -39,6 +38,7 @@ function refreshCanvas() {
 
 clearElement.addEventListener("click", clearCanvas);
 showEdges.addEventListener("click", () => {
+    // TODO: Manage this state better.
     refreshCanvas();
     if (showEdges.value === "1") {
         const entry = getRandPoint();
@@ -50,8 +50,8 @@ showEdges.addEventListener("click", () => {
 });
 
 c.addEventListener("click", (e) => {
-    var x = e.clientX * cssScaleX;
-    var y = e.clientY * cssScaleY;
+    const x = e.clientX * cssScaleX;
+    const y = e.clientY * cssScaleY;
     ctx.fillStyle = "black";
     ctx.fillRect(x - RECT_OFFSET, y - RECT_OFFSET, RECT_SIZE, RECT_SIZE);
     points.push([x, y]);
@@ -68,7 +68,8 @@ function getRandPoint() {
 function solve(currentPoint, pointsCpy) {
     // we have to do this because solve is run without the button begin pressed
     showEdges.value = "0";
-
+    
+    // We shouldn't use filter here
     pointsCpy = pointsCpy.filter(
         (point) =>
             !(point[0] === currentPoint[0] && point[1] === currentPoint[1])
@@ -102,6 +103,7 @@ function solve(currentPoint, pointsCpy) {
     ctx.stroke();
     ctx.closePath();
 
+    // We shouldn't use filter here
     pointsCpy = pointsCpy.filter(
         (point) =>
             !(
