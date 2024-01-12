@@ -55,12 +55,12 @@
             <div class="info-text" id="algorithm-status">Algorithm: <span>nearest_neighbors (heuristic, greedy)</span></div>
             <div class="info-text" id="status">Click anywhere to start!</div>
             <button id="clear">clear</button>
-            <button id="optimize" value="0"><span>_</span> optimize nearest_neighbors O(n<sup>3</sup>)</button>
-            <button id="toggle-edges" value="0">toggle_edges</button>
+            <button id="optimize" data-optimize="false"><span>_</span> optimize nearest_neighbors O(n<sup>3</sup>)</button>
+            <button id="toggle-edges" data-edges="false"><span>&#9679</span> show_edges</button>
             <div id="algorithm-toggle-container">
-                <button id="algorithm-toggle-nn" value="0"><span>&#9679</span> nearest_neighbors</button>
+                <button id="nn-button" data-algorithm="nn"><span>&#9679</span> nearest_neighbors</button>
                 /
-                <button id="algorithm-toggle-bnb" value="1"><span>_</span> branch_&_bound</button>
+                <button id="bnb-button" data-algorithm="bnb"><span>_</span> branch_&_bound</button>
             </div>
         </div>
         <canvas width="7680px" height="4320px" id="myCanvas"></canvas>
