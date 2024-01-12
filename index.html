@@ -1,55 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="./favicon.svg">
-    <title>TSP Browser</title>
-</head>
-<style>
-    * {
-        font-family: monospace;
-        margin: 0;
-        padding: 0;
-    }
-    body{
-        overflow: hidden;
-        width: 100vw;
-        height: 100vh;
-    }
-    button {
-        position: absolute;
-        top: 50px;
-        left: 50%;
-        font-size: 2rem;
-        transform: translateX(-50%);
-        padding: 10px 20px;
-        border-radius: 5px;
-        outline: none;
-        border: 1px solid grey;
-        background: white;
-        z-index: 1;
-    }
-    button:hover {
-        cursor: pointer;
-    }
-    canvas {
-        background: white;
-        width: 100vw;
-        height: 100vh;
-    }
-    #status {
-        font-size: 1rem;
-        position: absolute;
-        top: 1.25rem;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-</style>
-<body>
-   <button id="clear">Clear</button>
-   <div id="status">Click anywhere to start!</div>
-   <canvas width="7680px" height="4320px" id="myCanvas"></canvas> 
-</body>
-<script src="index.js"></script>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/x-icon" href="./favicon.svg" />
+        <title>TSP Browser</title>
+    </head>
+    <style>
+        * {
+            font-family: monospace;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+        #interaction-container {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        button {
+            font-size: 1.25rem;
+            background: white;
+            outline: none;
+            border: none;
+        }
+        button:hover {
+            text-decoration: underline;
+        }
+        #toggle-edges {
+            top: 110px;
+        }
+        button:hover {
+            cursor: pointer;
+        }
+        canvas {
+            background: white;
+            width: 100vw;
+            height: 100vh;
+        }
+        #status {
+            font-size: 1rem;
+            position: absolute;
+            top: 1.25rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+    <body>
+        <div id="status">Click anywhere to start!</div>
+        <div id="interaction-container">
+            <button id="clear">clear</button>
+            <button id="toggle-edges" values="0">toggle_edges</button>
+        </div>
+        <canvas width="7680px" height="4320px" id="myCanvas"></canvas>
+    </body>
+    <script src="index.js"></script>
 </html>
