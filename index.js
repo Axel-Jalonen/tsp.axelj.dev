@@ -6,7 +6,7 @@ var ctx = c.getContext("2d");
 // TODO, make this work for non 16:9 screens
 const statusElement = document.getElementById("status");
 const clearElement = document.getElementById("clear");
-const showEdges = document.getElementById("toggle-edges");
+const toggleEdgesElement = document.getElementById("toggle-edges");
 
 const RECT_SIZE = 30;
 const RECT_OFFSET = RECT_SIZE / 2;
@@ -37,16 +37,16 @@ function refreshCanvas() {
 }
 
 clearElement.addEventListener("click", clearCanvas);
-showEdges.addEventListener("click", () => {
+toggleEdgesElement.addEventListener("click", () => {
     // TODO: Manage this state better.
     refreshCanvas();
-    if (showEdges.value === "1") {
+    if (toggleEdgesElement.value === "1") {
         const entry = getRandPoint();
         solve(entry, points);
-        showEdges.value = "0";
+        toggleEdgesElement.value = "0";
         return;
     }
-    showEdges.value = "1";
+    toggleEdgesElement.value = "1";
 });
 
 c.addEventListener("click", (e) => {
@@ -67,7 +67,7 @@ function getRandPoint() {
 
 function solve(currentPoint, pointsCpy) {
     // we have to do this because solve is run without the button begin pressed
-    showEdges.value = "0";
+    toggleEdgesElement.value = "0";
     
     // We shouldn't use filter here
     pointsCpy = pointsCpy.filter(
