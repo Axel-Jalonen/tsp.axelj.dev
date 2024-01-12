@@ -39,6 +39,7 @@ c.addEventListener("click", (e) => {
     ctx.fillRect(x - RECT_OFFSET, y - RECT_OFFSET, RECT_SIZE, RECT_SIZE);
     points.push([x, y]);
     const entry = getRandPoint();
+    points = points.filter(point => !(point[0] === entry[0] && point[1] === entry[1]));
     refreshCanvas();
     solve(entry, points);
 })
