@@ -17,7 +17,7 @@ var totalDistance;
 function clearCanvas() {
     points = [];
     totalDistance = 0;
-    statusElement.innerHTML = `Total distance: ${totalDistance.toFixed(2)}`;
+    statusElement.innerHTML = "Click anywhere to start!";
     ctx.clearRect(0, 0, c.width, c.height);
 }
 
