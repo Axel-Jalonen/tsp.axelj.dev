@@ -1,12 +1,13 @@
 // INITIALIZATION
 const c = document.getElementById("myCanvas");
-var cssScaleX = c.width / c.offsetWidth; 
+var cssScaleX = c.width / c.offsetWidth;
 var cssScaleY = c.height / c.offsetHeight;
 var ctx = c.getContext("2d");
 
 // BEGIN: UI elements
 
-
+const algorithmStatusElement = document.getElementById("algorithm-status");
+const statusElement = document.getElementById("status");
 
 // END: UI elements
 
@@ -44,28 +45,35 @@ function updateAlgorithmSelectedUI() {
 
 function updateToggleUI(obj, prop, e) {
     if (obj[prop]) {
-        e.target.children[0].textContent = "_";
-    } else {
         e.target.children[0].textContent = "\u25CF";
+    } else {
+        e.target.children[0].textContent = "_";
     }
 }
 
-document.querySelectorAll("[data-algorithm]").forEach(button => {
+document.querySelectorAll("[data-algorithm]").forEach((button) => {
     button.addEventListener("click", (e) => {
         options.algorithm = e.target.getAttribute("data-algorithm");
         updateAlgorithmSelectedUI();
+        enterWithRandom();
     });
 });
 
 document.querySelector("[data-optimize]").addEventListener("click", (e) => {
-    updateToggleUI(options, "optimize", e);
     options.optimize = !options.optimize;
+    updateToggleUI(options, "optimize", e);
+    refreshCanvas();
+    optimizeNn();
 });
 
 document.querySelector("[data-edges]").addEventListener("click", (e) => {
-    updateToggleUI(options, "showEdges", e);
     options.showEdges = !options.showEdges;
+    updateToggleUI(options, "showEdges", e);
+    refreshCanvas();
+    enterWithRandom();
 });
+
+document.getElementById("clear-button").addEventListener("click", clearCanvas);
 
 c.addEventListener("click", (e) => {
     const x = e.clientX * cssScaleX;
@@ -73,14 +81,18 @@ c.addEventListener("click", (e) => {
     ctx.fillStyle = "black";
     ctx.fillRect(x - RECT_OFFSET, y - RECT_OFFSET, RECT_SIZE, RECT_SIZE);
     points.push([x, y]);
-    // TODO: enter function
+    if (options.optimize && options.algorithm === "nn") {
+        optimizeNn();
+    }
+    refreshCanvas(); 
+    enterWithRandom();
 });
 
 // END: Event listeners
 
 // BEGIN: Helper functions
 
-function reDrawStatus(message) {
+function drawStatus(message) {
     if (message) {
         statusElement.innerHTML = message;
     } else {
@@ -88,10 +100,18 @@ function reDrawStatus(message) {
     }
 }
 
+function drawAlgorithm(message) {
+    if (message) {
+        algorithmStatusElement.innerHTML = message;
+    } else {
+        algorithmStatusElement.innerHTML = "Click anywhere to start!";
+    }
+}
+
 function clearCanvas() {
     points = [];
     totalDistance = 0;
-    reDrawStatus();
+    drawStatus();
     ctx.clearRect(0, 0, c.width, c.height);
 }
 
@@ -129,26 +149,20 @@ function getRandPoint() {
 }
 
 function enterWithRandom() {
-    const entryPoint = getRandPoint();
-    entry(entryPoint, points);
+    entry(getRandPoint(), points);
 }
 
 // END: Helper functions
 
 function entry(currentPoint, pointsCpy) {
-    // we have to do this because entry is run without the button begin pressed
-    toggleEdgesElement.value = "0";
-
-    if (globalState.algorithm === "bnb") {
-        algorithmStatusElement.textContent =
-            "Branch and Bound (exact) (NOT IMPLEMENTED)";
-        reDrawStatus("Coming soon.");
+    if (options.algorithm === "bnb") {
+        drawAlgorithm("Branch and Bound (exact) (NOT IMPLEMENTED)");
+        drawStatus("Coming soon.");
         refreshCanvas();
         return;
-    } else if (globalState.algorithm === "nn") {
-        algorithmStatusElement.textContent =
-            "nearest_neighbors (heuristic, greedy)";
-        reDrawStatus();
+    } else if (options.algorithm === "nn") {
+        drawAlgorithm("Nearest Neighbors (heuristic, greedy)");
+        drawStatus();
         nearestNeighbors(currentPoint, pointsCpy);
     }
 }
@@ -182,14 +196,16 @@ function nearestNeighbors(currentPoint, pointsCpy) {
 
     totalDistance += distance;
     if (totalDistance !== Infinity) {
-        reDrawStatus(`Total distance: ${totalDistance.toFixed(2)}`);
+        drawStatus(`Total distance: ${totalDistance.toFixed(2)}`);
     }
 
-    ctx.beginPath();
-    ctx.moveTo(currentPoint[0], currentPoint[1]);
-    ctx.lineTo(bestPoint[0], bestPoint[1]);
-    ctx.stroke();
-    ctx.closePath();
+    if (options.showEdges) {
+        ctx.beginPath();
+        ctx.moveTo(currentPoint[0], currentPoint[1]);
+        ctx.lineTo(bestPoint[0], bestPoint[1]);
+        ctx.stroke();
+        ctx.closePath();
+    }
 
     // We shouldn't use filter here
     pointsCpy = pointsCpy.filter(
