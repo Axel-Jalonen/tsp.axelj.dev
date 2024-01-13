@@ -99,9 +99,9 @@ c.addEventListener("click", (e) => {
 
 function drawStatus(message) {
     if (message) {
-        statusElement.innerHTML = message;
+        statusElement.textContent = message;
     } else {
-        statusElement.innerHTML = "Click anywhere to start!";
+        statusElement.textContent = "Click anywhere to start!";
     }
 }
 
@@ -109,7 +109,8 @@ function drawAlgorithm(message) {
     if (message) {
         algorithmStatusElement.children[0].textContent = message;
     } else {
-        algorithmStatusElement.children[0].textContent = "Click anywhere to start!";
+        algorithmStatusElement.children[0].textContent =
+            "Click anywhere to start!";
     }
 }
 
