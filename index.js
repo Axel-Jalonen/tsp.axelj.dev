@@ -81,11 +81,16 @@ c.addEventListener("click", (e) => {
     ctx.fillStyle = "black";
     ctx.fillRect(x - RECT_OFFSET, y - RECT_OFFSET, RECT_SIZE, RECT_SIZE);
     points.push([x, y]);
-    if (options.optimize && options.algorithm === "nn") {
-        optimizeNn();
+    if (options.showEdges) {
+        if (options.optimize && options.algorithm === "nn") {
+            console.log("Running with optimization");
+            optimizeNn();
+        } else {
+            console.log("Running without optimization");
+            refreshCanvas();
+            enterWithRandom();
+        }
     }
-    refreshCanvas(); 
-    enterWithRandom();
 });
 
 // END: Event listeners
@@ -102,9 +107,9 @@ function drawStatus(message) {
 
 function drawAlgorithm(message) {
     if (message) {
-        algorithmStatusElement.innerHTML = message;
+        algorithmStatusElement.children[0].textContent = message;
     } else {
-        algorithmStatusElement.innerHTML = "Click anywhere to start!";
+        algorithmStatusElement.children[0].textContent = "Click anywhere to start!";
     }
 }
 
@@ -149,7 +154,11 @@ function getRandPoint() {
 }
 
 function enterWithRandom() {
-    entry(getRandPoint(), points);
+    if (options.optimize) {
+        optimizeNn();
+    } else {
+        entry(getRandPoint(), points);
+    }
 }
 
 // END: Helper functions
@@ -159,10 +168,13 @@ function entry(currentPoint, pointsCpy) {
         drawAlgorithm("Branch and Bound (exact) (NOT IMPLEMENTED)");
         drawStatus("Coming soon.");
         refreshCanvas();
+        throw new Error("Not implemented");
+        branchAndBound(currentPoint, pointsCpy);
         return;
     } else if (options.algorithm === "nn") {
         drawAlgorithm("Nearest Neighbors (heuristic, greedy)");
         drawStatus();
+        console.log("Running nearest neighbors");
         nearestNeighbors(currentPoint, pointsCpy);
     }
 }
