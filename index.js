@@ -129,7 +129,7 @@ function refreshCanvas() {
       point[0] - RECT_OFFSET,
       point[1] - RECT_OFFSET,
       RECT_SIZE,
-      RECT_SIZE
+      RECT_SIZE,
     );
   });
 }
@@ -174,6 +174,7 @@ function entry(currentPoint, pointsCpy) {
   } else if (options.algorithm === "nn") {
     drawAlgorithm("Nearest Neighbors (heuristic, greedy)");
     drawStatus();
+    refreshCanvas();
     console.log("Running nearest neighbors");
     nearestNeighbors(currentPoint, pointsCpy);
   }
@@ -197,7 +198,7 @@ function nearestNeighbors(currentPoint, pointsCpy) {
     if (!(point[0] === currentPoint[0] && point[1] === currentPoint[1])) {
       const distanceNew = Math.sqrt(
         Math.pow(currentPoint[0] - point[0], 2) +
-          Math.pow(currentPoint[1] - point[1], 2)
+          Math.pow(currentPoint[1] - point[1], 2),
       );
       if (distanceNew < distance) {
         distance = distanceNew;
@@ -223,7 +224,7 @@ function nearestNeighbors(currentPoint, pointsCpy) {
   pointsCpy = pointsCpy.filter(
     (point) =>
       !(point[0] === bestPoint[0] && point[1] === bestPoint[1]) &&
-      !(point[0] === currentPoint[0] && point[1] === currentPoint[1])
+      !(point[0] === currentPoint[0] && point[1] === currentPoint[1]),
   );
 
   nearestNeighbors(bestPoint, pointsCpy);
